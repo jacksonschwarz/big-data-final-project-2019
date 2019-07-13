@@ -16,28 +16,37 @@ def findCompany(row):
         return None
 
 def findName(row):
-        try:
+    try:
 
-            applicantOrInventorBag = row["patentCaseMetadata"]["partyBag"]["applicantBagOrInventorBagOrOwnerBag"][1]
-            inventorContact = applicantOrInventorBag["inventorOrDeceasedInventor"][0]["contactOrPublicationContact"][0]
-            inventorName = inventorContact["name"]["personNameOrOrganizationNameOrEntityName"][0]["personStructuredName"]
-            fullName = " ".join(inventorName.values())
-            return fullName
-        except (KeyError, IndexError):
-            return None
+        applicantOrInventorBag = row["patentCaseMetadata"]["partyBag"]["applicantBagOrInventorBagOrOwnerBag"][1]
+        inventorContact = applicantOrInventorBag["inventorOrDeceasedInventor"][0]["contactOrPublicationContact"][0]
+        inventorName = inventorContact["name"]["personNameOrOrganizationNameOrEntityName"][0]["personStructuredName"]
+        fullName = " ".join(inventorName.values())
+        return fullName
+    except (KeyError, IndexError):
+        return None
         
 
 def findLocation(row):
-        try:
-            applicantOrInventorBag = row["patentCaseMetadata"]["partyBag"]["applicantBagOrInventorBagOrOwnerBag"][1]
-            inventorContact = applicantOrInventorBag["inventorOrDeceasedInventor"][0]["contactOrPublicationContact"][0]
-            cityName = inventorContact["cityName"]
-            stateName = inventorContact["geographicRegionName"]["value"]
-            countryCode = inventorContact["countryCode"]
-            fullLocation = ((cityName),(stateName), (countryCode))    
-            return fullLocation
-        except (KeyError, IndexError):
-            return None
+    try:
+        applicantOrInventorBag = row["patentCaseMetadata"]["partyBag"]["applicantBagOrInventorBagOrOwnerBag"][1]
+        inventorContact = applicantOrInventorBag["inventorOrDeceasedInventor"][0]["contactOrPublicationContact"][0]
+        cityName = inventorContact["cityName"]
+        stateName = inventorContact["geographicRegionName"]["value"]
+        countryCode = inventorContact["countryCode"]
+        fullLocation = ((cityName),(stateName), (countryCode))
+        return fullLocation
+    except (KeyError, IndexError):
+        return None
+
+def findClass(row):
+    try:
+        nationalClass = row["patentCaseMetadata"]["patentClassificationBag"] \
+            ["cpcClassificationBagOrIPCClassificationOrECLAClassificationBag"][0] \
+            ["mainNationalClassification"]["nationalClass"]
+        return nationalClass
+    except (KeyError, IndexError):
+        return None
 
 def findDate(row):
     try:
@@ -52,6 +61,6 @@ def writeYear(year):
         f.write(str(rowTup))
     f.close()
 
-for y in range(2017, 2020):
+for y in range(2019, 2020):
     print("Parsing {}".format(y))
     writeYear(y)
