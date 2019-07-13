@@ -57,10 +57,13 @@ def findDate(row):
 def writeYear(year):
     f = open("./parsed-data/{}-parsed.txt".format(year), "w")
     for row in createData(year):
-        rowTup = (findCompany(row), findName(row), findLocation(row), findDate(row))
+        rowTup = (findCompany(row), findClass(row), findName(row), findLocation(row), findDate(row))
         f.write(str(rowTup))
     f.close()
 
-for y in range(2019, 2020):
-    print("Parsing {}".format(y))
-    writeYear(y)
+for y in range(1900, 2020):
+    try:
+        print("Parsing {}".format(y))
+        writeYear(y)
+    except(IOError):
+        print("Data not found for year {}".format(y))
