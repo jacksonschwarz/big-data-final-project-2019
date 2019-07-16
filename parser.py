@@ -1,4 +1,5 @@
 import json
+import pickle
 
 def createData(year):
     with open("data/{}.json".format(year), "r") as file:
@@ -55,15 +56,18 @@ def findDate(row):
         return None
 
 def writeYear(year):
-    f = open("./parsed-data/{}-parsed.txt".format(year), "w")
-    for row in createData(year):
-        rowTup = (findCompany(row), findClass(row), findName(row), findLocation(row), findDate(row))
-        f.write(str(rowTup))
-    f.close()
-
-for y in range(1900, 2020):
     try:
-        print("Parsing {}".format(y))
-        writeYear(y)
+        f = open("./parsed-data/{}-parsed.pkl".format(year), "wb")
+        totalData = []
+        for row in createData(year):
+            rowTup = (findCompany(row), findClass(row), findName(row), findLocation(row), findDate(row))
+            totalData.append(rowTup)
+        pickle.dump((totalData), f)
+        f.close()
     except(IOError):
         print("Data not found for year {}".format(y))
+        
+
+for y in range(1900, 2020):
+    print("Parsing {}".format(y))
+    writeYear(y)
